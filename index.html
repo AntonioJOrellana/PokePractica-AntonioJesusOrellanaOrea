@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="pokeball.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+  <title>PokePractica</title>
+</head>
+<body>
+  <header>
+    <nav class="menu">
+      <img src="pokeLogo.png" alt="Logo Pokédex" class="logo">
+      <ul class="menu__list">
+        <li class="menu__item"><button class="btn btn-header water" id="water">Pokemon Azul</button></li>
+        <li class="menu__item"><button class="btn btn-header fire" id="fire">Pokemon Rojo</button></li>
+        <li class="menu__item"><button class="btn btn-header electric" id="electric">Pokemon Amarillo</button></li>
+        <li class="menu__item"><button class="btn btn-header grass" id="mostrar">Mostrar Todos</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div id="buscador" style="text-align:center; margin:20px 0;">
+      <input type="text" id="inputBuscar" placeholder="Escribe el nombre o ID del Pokémon" style="padding:5px; width:200px;">
+      <button id="btnBuscar" style="padding:5px 10px; margin-left:10px; cursor:pointer;">Buscar</button>
+    </div>
+
+
+    <div id="resultado" style="text-align:center; margin-bottom:30px;"></div>
+
+    <div id="todos">
+      <div class="pokemon-todos" id="listaPokemon">
+    
+      </div>
+    </div>
+  </main>
+</body>
+</html>
