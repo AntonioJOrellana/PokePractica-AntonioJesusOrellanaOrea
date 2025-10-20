@@ -95,3 +95,77 @@ async function cargarPokemones() {
   }
 }
 cargarPokemones();
+
+
+// Ejercicio 3 - Buscador de Pokémon con diseño personalizado
+
+
+// Seleccionamos los elementos del HTML
+const inputBuscar = document.getElementById('inputBuscar');
+const btnBuscar = document.getElementById('btnBuscar');
+const resultado = document.getElementById('resultado');
+const contenedorPokemones = document.getElementById('listaPokemon'); 
+
+// Función para buscar un Pokémon entre los 151 cargados
+function buscarPokemon() {
+  const valor = inputBuscar.value.toLowerCase().trim();
+
+  // Si el campo está vacío
+  if (valor === '') {
+    resultado.innerHTML = `<p>Por favor, escribe un nombre o ID.</p>`;
+    return;
+  }
+
+  // Buscar el Pokémon dentro del array 
+  const encontrado = pokemones151.find(
+    (p) => p.nombre.toLowerCase() === valor || p.id.toString() === valor
+  );
+
+  // Si lo encuentra, oculta los demas
+  if (encontrado) {
+    // Ocultar la lista de los 151 Pokémon
+    contenedorPokemones.style.display = "none";
+
+    // Mostrar solo el Pokémon encontrado
+    resultado.innerHTML = `
+      <div class="pokemon">
+        <div class="pokemon-imagen">
+          <img src="${encontrado.imagen}" alt="${encontrado.nombre}">
+        </div>
+        <div class="pokemon-info">
+          <div class="nombre-contenedor">
+            <p class="pokemon-id">#${encontrado.id
+              .toString()
+              .padStart(3, '0')}</p>
+            <h2 class="pokemon-nombre">${encontrado.nombre}</h2>
+          </div>
+          <div class="pokemon-tipos">
+            ${encontrado.tipos
+              .map((tipo) => `<p class="tipo ${tipo}">${tipo}</p>`)
+              .join('')}
+          </div>
+          <p>Peso: ${encontrado.peso} kg</p>
+          <p>Altura: ${encontrado.altura} m</p>
+        </div>
+      </div>
+    `;
+  } else {
+    resultado.innerHTML = `<p style="color:red;">Pokémon no encontrado entre los 151 primeros</p>`;
+  }
+}
+
+//Si quiere volver a ver todos los Pokémon
+function mostrarTodos() {
+  resultado.innerHTML = ""; 
+  contenedorPokemones.style.display = "grid"; 
+  inputBuscar.value = ""; 
+}
+
+//  Eventos del buscador
+btnBuscar.addEventListener('click', buscarPokemon);
+inputBuscar.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') buscarPokemon();
+});
+
+// Evento del botón "Mostrar Todos"
+btnMostrar.addEventListener('click', mostrarTodos);
