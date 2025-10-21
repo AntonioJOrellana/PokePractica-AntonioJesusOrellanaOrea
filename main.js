@@ -1,6 +1,4 @@
-
 // Ejercicio 1 - Manipular eventos de los tres botones para cambiar el color del nav
-
 
 // Seleccionamos los botones y el nav
 const nav = document.querySelector("nav");
@@ -9,21 +7,17 @@ const btnFire = document.getElementById("fire");
 const btnElectric = document.getElementById("electric");
 const btnMostrar = document.getElementById("mostrar");
 
-
 function cambiarColorAgua() {
   nav.style.backgroundColor = "#5AB1F8"; // Azul tipo agua
 }
-
 
 function cambiarColorFuego() {
   nav.style.backgroundColor = "#F08030"; // Rojo tipo fuego
 }
 
-
 function cambiarColorElectrico() {
   nav.style.backgroundColor = "#F8D030"; // Amarillo tipo eléctrico
 }
-
 
 function cambiarColorMostrar() {
   nav.style.backgroundColor = "#4CAF50"; // Verde tipo planta
@@ -34,33 +28,27 @@ btnFire.addEventListener("click", cambiarColorFuego);
 btnElectric.addEventListener("click", cambiarColorElectrico);
 btnMostrar.addEventListener("click", cambiarColorMostrar);
 
-
-//Ejercicio 2 - Fetch y renderizado de los primeros 151 Pokémon
+// Ejercicio 2 - Fetch y renderizado de los primeros 151 Pokémon
 const listaPokemon = document.getElementById('listaPokemon');
 const pokemones151 = []; 
+let pokemonesCargados = false; // para saber si se han cargado
+
 async function cargarPokemones() {
   try {
-
-
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
     const data = await response.json();
 
-
-    data.results.forEach(async (pokemon) => {
- 
+    for (const pokemon of data.results) {
       const res = await fetch(pokemon.url);
       const dataPokemon = await res.json();
 
-
       const div = document.createElement('div');
       div.classList.add('pokemon');
-
 
       const nombre = dataPokemon.name;
       const id = dataPokemon.id.toString().padStart(3, '0'); 
       const imagen = dataPokemon.sprites.other['official-artwork'].front_default;
       const tipos = dataPokemon.types.map(t => t.type.name);
-
 
       pokemones151.push({
         id: dataPokemon.id,
@@ -68,9 +56,8 @@ async function cargarPokemones() {
         tipos: dataPokemon.types.map(t => t.type.name),
         imagen: dataPokemon.sprites.other['official-artwork'].front_default,
         peso: (dataPokemon.weight / 10).toFixed(1),
-       altura: (dataPokemon.height / 10).toFixed(1)
-    });
-
+        altura: (dataPokemon.height / 10).toFixed(1)
+      });
 
       div.innerHTML = `
         <div class="pokemon-imagen">
@@ -87,18 +74,17 @@ async function cargarPokemones() {
         </div>
       `;
       listaPokemon.appendChild(div);
-    });
+    }
 
-
+    pokemonesCargados = true; // Ya se han cargado 
   } catch (error) {
     console.error('Error al cargar los Pokémon:', error);
   }
 }
-cargarPokemones();
+
 
 
 // Ejercicio 3 - Buscador de Pokémon con diseño personalizado
-
 
 // Seleccionamos los elementos del HTML
 const inputBuscar = document.getElementById('inputBuscar');
@@ -110,23 +96,18 @@ const contenedorPokemones = document.getElementById('listaPokemon');
 function buscarPokemon() {
   const valor = inputBuscar.value.toLowerCase().trim();
 
-  // Si el campo está vacío
   if (valor === '') {
     resultado.innerHTML = `<p>Por favor, escribe un nombre o ID.</p>`;
     return;
   }
 
-  // Buscar el Pokémon dentro del array 
   const encontrado = pokemones151.find(
     (p) => p.nombre.toLowerCase() === valor || p.id.toString() === valor
   );
 
-  // Si lo encuentra, oculta los demas
   if (encontrado) {
-    // Ocultar la lista de los 151 Pokémon
     contenedorPokemones.style.display = "none";
 
-    // Mostrar solo el Pokémon encontrado
     resultado.innerHTML = `
       <div class="pokemon">
         <div class="pokemon-imagen">
@@ -134,15 +115,11 @@ function buscarPokemon() {
         </div>
         <div class="pokemon-info">
           <div class="nombre-contenedor">
-            <p class="pokemon-id">#${encontrado.id
-              .toString()
-              .padStart(3, '0')}</p>
+            <p class="pokemon-id">#${encontrado.id.toString().padStart(3, '0')}</p>
             <h2 class="pokemon-nombre">${encontrado.nombre}</h2>
           </div>
           <div class="pokemon-tipos">
-            ${encontrado.tipos
-              .map((tipo) => `<p class="tipo ${tipo}">${tipo}</p>`)
-              .join('')}
+            ${encontrado.tipos.map((tipo) => `<p class="tipo ${tipo}">${tipo}</p>`).join('')}
           </div>
           <p>Peso: ${encontrado.peso} kg</p>
           <p>Altura: ${encontrado.altura} m</p>
@@ -154,14 +131,18 @@ function buscarPokemon() {
   }
 }
 
-//Si quiere volver a ver todos los Pokémon
-function mostrarTodos() {
+async function mostrarTodos() {
   resultado.innerHTML = ""; 
   contenedorPokemones.style.display = "grid"; 
   inputBuscar.value = ""; 
+
+  //solo si aún no se han cargado
+  if (!pokemonesCargados) {
+    await cargarPokemones();
+  }
 }
 
-//  Eventos del buscador
+// Eventos del buscador
 btnBuscar.addEventListener('click', buscarPokemon);
 inputBuscar.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') buscarPokemon();
